@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>深圳 & 广州 薅羊毛与省钱交互式全攻略 (SZ & GZ Deals Hub)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --background: #f8fafc;
+      --card: #ffffff;
+      --foreground: #0f172a;
+      --muted-foreground: #64748b;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --primary-foreground: #ffffff;
+      --secondary: #f1f5f9;
+      --secondary-foreground: #334155;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background: #0f172a;
+        --card: #1e293b;
+        --foreground: #f8fafc;
+        --muted-foreground: #94a3b8;
+        --border: #334155;
+        --primary: #3b82f6;
+        --primary-foreground: #ffffff;
+        --secondary: #334155;
+        --secondary-foreground: #e2e8f0;
+      }
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    .copy-btn:active {
+      transform: scale(0.96);
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased p-4 md:p-8 max-w-6xl mx-auto">
+
+  <!-- Header Banner -->
+  <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 md:p-6 mb-6 shadow-sm">
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div>
+        <div class="flex flex-wrap items-center gap-2 mb-2">
+          <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-[var(--primary)] text-[var(--primary-foreground)]">深圳 · 广州 双城实操版</span>
+          <span class="px-2.5 py-0.5 text-xs font-medium rounded-full bg-[var(--secondary)] text-[var(--secondary-foreground)]">6大分类 · 16个专题 · 支持一键复制口令</span>
+          <a href="https://github.com/KimRasak/gz-sz-deals-guide" target="_blank" class="px-2.5 py-0.5 text-xs font-medium rounded-full border border-[var(--border)] hover:bg-[var(--secondary)] transition">🔗 GitHub 仓库</a>
+        </div>
+        <h1 class="text-xl md:text-2xl font-bold text-[var(--foreground)]">🏙️ 深圳 & 广州 薅羊毛与省钱交互式全攻略</h1>
+        <p class="text-sm text-[var(--muted-foreground)] mt-1">
+          涵盖：<strong>政府消费券与国补</strong> · <strong>地铁公交与跨境羊毛</strong> · <strong>超市晚间清仓与剩菜盲盒</strong> · <strong>市民夜校与免费知网</strong> · <strong>银行立减金与工会外挂</strong> · <strong>社康高额报销与免费体检</strong>
+        </p>
+      </div>
+
+      <!-- City Filter & Quick Search -->
+      <div class="flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center">
+        <div class="inline-flex rounded-xl bg-[var(--secondary)] p-1 border border-[var(--border)]">
+          <button onclick="setCityFilter('all')" id="city-btn-all" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-[var(--primary)] text-[var(--primary-foreground)]">全部双城</button>
+          <button onclick="setCityFilter('sz')" id="city-btn-sz" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition text-[var(--secondary-foreground)]">仅看深圳</button>
+          <button onclick="setCityFilter('gz')" id="city-btn-gz" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition text-[var(--secondary-foreground)]">仅看广州</button>
+        </div>
+        <div class="relative">
+          <input type="text" id="global-search" oninput="handleSearch(this.value)" placeholder="搜索：盒马 / 夜校 / 社康 / 颐年卡..." class="w-full sm:w-56 px-3 py-1.5 text-xs rounded-xl bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="flex flex-wrap gap-2 mt-5 pt-4 border-t border-[var(--border)]">
+      <button onclick="switchTab('gov')" id="tab-btn-gov" class="px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold transition bg-[var(--primary)] text-[var(--primary-foreground)]">
+        1. 🏛️ 政府消费券 & 国补政务
+      </button>
+      <button onclick="switchTab('transit')" id="tab-btn-transit" class="px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold transition bg-[var(--secondary)] text-[var(--secondary-foreground)]">
+        2. 🚇 交通出行 & 港澳跨境
+      </button>
+      <button onclick="switchTab('food')" id="tab-btn-food" class="px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold transition bg-[var(--secondary)] text-[var(--secondary-foreground)]">
+        3. 🍱 超市打折雷达 & 剩菜盲盒
+      </button>
+      <button onclick="switchTab('culture')" id="tab-btn-culture" class="px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold transition bg-[var(--secondary)] text-[var(--secondary-foreground)]">
+        4. 🏸 体育订场 & 夜校/图书馆
+      </button>
+      <button onclick="switchTab('bank')" id="tab-btn-bank" class="px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold transition bg-[var(--secondary)] text-[var(--secondary-foreground)]">
+        5. 💳 银行立减金 & 工会外挂
+      </button>
+      <button onclick="switchTab('health')" id="tab-btn-health" class="px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold transition bg-[var(--secondary)] text-[var(--secondary-foreground)]">
+        6. 🏥 社康医保 & 免费体检/优待
+      </button>
+      <button onclick="switchTab('tools')" id="tab-btn-tools" class="px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold transition bg-[var(--secondary)] text-[var(--secondary-foreground)]">
+        7. 📱 必装小程序口令 & 黄金时间轴
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="copy-toast" class="fixed bottom-5 right-5 hidden bg-blue-600 text-white px-4 py-2.5 rounded-xl shadow-lg text-xs md:text-sm font-medium z-50">
+    ✅ 已复制，可直接去微信/支付宝/云闪付/抖音粘贴搜索！
+  </div>
+
+  <!-- ================= TAB 1: GOV SUBSIDIES ================= -->
+  <div id="tab-gov" class="tab-section space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- SZ Consumption Vouchers -->
+      <div class="deal-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm" data-city="sz">
+        <div class="flex items-center justify-between mb-3">
+          <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-blue-500/15 text-blue-500">深圳专属</span>
+          <span class="text-xs text-[var(--muted-foreground)]">立省 30%～50%</span>
+        </div>
+        <h3 class="text-base font-bold mb-2">🎟️ 深圳各区餐饮/零售/文旅消费券</h3>
+        <p class="text-xs text-[var(--muted-foreground)] mb-3">南山、福田、罗湖、宝安、龙岗、龙华、光明等区轮流在抖音、美团、云闪付发放，可叠加门店团购套餐折上折。</p>
+        <ul class="text-xs space-y-2 mb-4">
+          <li>• <strong>抖音团购券</strong>：搜对应区名（如“南山消费券”、“龙岗消费券”），常见满100减30、满200减60、满500减150。</li>
+          <li>• <strong>美团 / 大众点评</strong>：上午 10:00 限时抢或报名摇号，覆盖商圈餐饮与酒店。</li>
+          <li>• <strong>微信各区入口</strong>：关注各区官方融媒体小程序抢无门槛数字人民币红包与文体券。</li>
+        </ul>
+        <div class="flex flex-wrap gap-1.5 pt-3 border-t border-[var(--border)]">
+          <button onclick="copyText('南山消费券')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 复制：南山消费券</button>
+          <button onclick="copyText('福田消费券')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 复制：福田消费券</button>
+          <button onclick="copyText('礼享罗湖')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 小程序：礼享罗湖</button>
+          <button onclick="copyText('南山通')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 小程序：南山通</button>
+        </div>
+      </div>
+
+      <!-- GZ Consumption Vouchers -->
+      <div class="deal-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm" data-city="gz">
+        <div class="flex items-center justify-between mb-3">
+          <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-amber-500/15 text-amber-500">广州专属</span>
+          <span class="text-xs text-[var(--muted-foreground)]">早茶/粤菜必领</span>
+        </div>
+        <h3 class="text-base font-bold mb-2">🥟 “食在广州”餐饮消费券 & 广东文旅券</h3>
+        <p class="text-xs text-[var(--muted-foreground)] mb-3">覆盖广州酒家、陶陶居、点都德、利苑、炳胜等各大粤菜名店及全市连锁商场餐饮。</p>
+        <ul class="text-xs space-y-2 mb-4">
+          <li>• <strong>发放档位</strong>：满 50 减 15、满 100 减 30、满 200 减 50、满 500 减 100、满 1000 减 200。</li>
+          <li>• <strong>领券平台</strong>：云闪付 App“广东消费券”专区、美团/抖音/支付宝搜“食在广州”。</li>
+          <li>• <strong>有奖发票</strong>：在广州餐饮、住宿、零售消费索取个人数电发票，可在“广州税务”或支付宝参与发票摇奖。</li>
+        </ul>
+        <div class="flex flex-wrap gap-1.5 pt-3 border-t border-[var(--border)]">
+          <button onclick="copyText('食在广州消费券')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 复制：食在广州消费券</button>
+          <button onclick="copyText('广东消费券')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 小程序：广东消费券</button>
+          <button onclick="copyText('广州税务')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 公众号：广州税务(发票抽奖)</button>
+        </div>
+      </div>
+
+      <!-- National Trade-in Subsidies -->
+      <div class="deal-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm" data-city="all">
+        <div class="flex items-center justify-between mb-3">
+          <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-emerald-500/15 text-emerald-500">广深通用 · 国补/省补</span>
+          <span class="text-xs font-semibold text-emerald-500">最高立减 ¥2,000 / 单件</span>
+        </div>
+        <h3 class="text-base font-bold mb-2">📱 家电、手机/平板/电脑 3C 数码“以旧换新”国补</h3>
+        <p class="text-xs text-[var(--muted-foreground)] mb-3">买空调冰箱洗衣机、笔记本电脑、手机、平板、智能手表前必领资格码，直接立减 15%～20%！</p>
+        <ul class="text-xs space-y-2 mb-4">
+          <li>• <strong>补贴比例</strong>：一级能效家电立减 <strong>20%</strong>（封顶2000元）；3C数码（手机/平板/穿戴）立减 <strong>15%</strong>（封顶500元）。</li>
+          <li>• <strong>线上流程</strong>：先在云闪付领深圳/广州（粤焕新）资格 -> 打开京东/淘宝搜“深圳国补”或“广东国补”绑定资格直接立减。</li>
+          <li>• <strong>线下门店</strong>：顺电、京东MALL、苏宁、Apple授权店、华为/小米之家出示云闪付付款码直接抵扣。</li>
+        </ul>
+        <div class="flex flex-wrap gap-1.5 pt-3 border-t border-[var(--border)]">
+          <button onclick="copyText('粤焕新')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 小程序：粤焕新</button>
+          <button onclick="copyText('深圳以旧换新')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 云闪付搜：深圳以旧换新</button>
+          <button onclick="copyText('广东国补')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 京东/淘宝搜：广东国补</button>
+        </div>
+      </div>
+
+      <!-- Skill Subsidies & Housing Fund -->
+      <div class="deal-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm" data-city="all">
+        <div class="flex items-center justify-between mb-3">
+          <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-purple-500/15 text-purple-500">广深打工人必领</span>
+          <span class="text-xs font-semibold text-purple-500">现金补贴 ¥1,000～¥3,000</span>
+        </div>
+        <h3 class="text-base font-bold mb-2">🎓 考证领技能提升补贴 + 公积金租房提取 + 青年驿站</h3>
+        <p class="text-xs text-[var(--muted-foreground)] mb-3">在职交社保即可解锁的官方现金补贴与住房福利，手机线上零跑腿办理。</p>
+        <ul class="text-xs space-y-2 mb-4">
+          <li>• <strong>技能提升补贴</strong>：考取目录内职业技能等级证书（初级1000元/中级1500元/高级2000~3000元），核发12个月内在“粤省事”申领现金，次年还能抵扣 <strong>3600元个税定额</strong>！</li>
+          <li>• <strong>公积金按月租房提取</strong>：深圳无房可提当月缴存额 <strong>80%～100%</strong>；广州无合同备案亦可按月定额提取（1400~2000元/月），签协议后每月自动到账银行卡。</li>
+          <li>• <strong>免费青年驿站 & 保租房</strong>：应届生来深/来穗求职可申请免费住 7～15 天青年驿站；符合条件可申租 6 折政府保租房。</li>
+        </ul>
+        <div class="flex flex-wrap gap-1.5 pt-3 border-t border-[var(--border)]">
+          <button onclick="copyText('粤省事')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 小程序：粤省事</button>
+          <button onclick="copyText('青年驿站')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 小程序：青年驿站</button>
+          <button onclick="copyText('广州住房公积金管理中心')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 公众号：广州住房公积金</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TAB 2: TRANSIT & CROSS-BORDER ================= -->
+  <div id="tab-transit" class="tab-section hidden space-y-6">
+    <!-- Interactive Transit Discount Calculator -->
+    <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[var(--border)]">
+        <div>
+          <h3 class="text-base font-bold">🧮 广深地铁/公交月度通勤省钱模拟器</h3>
+          <p class="text-xs text-[var(--muted-foreground)]">拖动滑块测算你的每月通勤原价与最优刷卡策略（广州羊城通阶梯累减 vs 深圳通折扣 + 乘车券）</p>
+        </div>
+        <div class="flex items-center gap-3 text-xs">
+          <span>单程票价: <strong id="calc-fare-label">¥6</strong></span>
+          <input type="range" id="calc-fare" min="2" max="15" value="6" oninput="updateTransitCalc()" class="w-24 accent-blue-600">
+          <span>每月通勤天数: <strong id="calc-days-label">22天 (44次)</strong></span>
+          <input type="range" id="calc-days" min="5" max="30" value="22" oninput="updateTransitCalc()" class="w-24 accent-blue-600">
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 text-xs">
+        <div class="p-3.5 rounded-xl bg-[var(--secondary)]">
+          <div class="text-[var(--muted-foreground)]">每月原价总支出</div>
+          <div id="calc-raw-total" class="text-xl font-bold mt-1">¥264.0</div>
+          <div class="text-[var(--muted-foreground)] mt-1">直接买单程票或分散多个App扫码</div>
+        </div>
+        <div class="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30">
+          <div class="font-semibold text-amber-500">广州·羊城通同一账号实付</div>
+          <div id="calc-gz-total" class="text-xl font-bold mt-1">¥208.0 <span class="text-xs font-normal text-emerald-500">(省 ¥56.0)</span></div>
+          <div id="calc-gz-tip" class="text-[var(--muted-foreground)] mt-1">满80元后8折，满200元后5折！务必固定同一张卡/码</div>
+        </div>
+        <div class="p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/30">
+          <div class="font-semibold text-blue-500">深圳·深圳通NFC / 乘车券组合</div>
+          <div id="calc-sz-total" class="text-xl font-bold mt-1">¥206.8 <span class="text-xs font-normal text-emerald-500">(省 ¥57.2)</span></div>
+          <div class="text-[var(--muted-foreground)] mt-1">地铁95折/公交65~8折 + 90分钟换乘减0.4元 + 云闪付/数币周卡</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="deal-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm" data-city="all">
+        <h3 class="text-base font-bold mb-2">🚇 云闪付 / 数字人民币乘车立减</h3>
+        <ul class="text-xs space-y-2 text-[var(--muted-foreground)]">
+          <li>• <strong>深圳通 App 权益中心</strong>：汇集招行、平安、建行、中行、工行乘车券，常年有“1分钱乘车”或单次立减 0.99～1.99 元。</li>
+          <li>• <strong>广州云闪付出行</strong>：切换广州定位领乘车优惠券或绑定 Apple Pay 银联卡过闸享立减。</li>
+          <li>• <strong>支付宝/微信出行周卡</strong>：搜“深圳地铁优惠”或“广州地铁优惠”，1.99 元购多张 1～2 元抵扣券。</li>
+        </ul>
+      </div>
+
+      <div class="deal-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm" data-city="all">
+        <h3 class="text-base font-bold mb-2">🅿️ 核心商场免费停车 & 夜间谷电</h3>
+        <ul class="text-xs space-y-2 text-[var(--muted-foreground)]">
+          <li>• <strong>深圳商场停车</strong>：万象天地/深圳湾万象城（一点万象App积分兑1~2小时）、壹方城（壹方汇签到积分抵扣）、卓悦中心（首绑车牌减免）。</li>
+          <li>• <strong>广州商场停车</strong>：正佳广场、天河城、天环、K11 提前在公众号绑车牌用会员积分或消费小票免 1～2 小时。</li>
+          <li>• <strong>新能源充电</strong>：晚 23:00–早 07:00 谷电时段快充仅 <strong>0.55～0.75 元/度</strong>，比白天省一半。</li>
+        </ul>
+      </div>
+
+      <div class="deal-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm" data-city="all">
+        <h3 class="text-base font-bold mb-2">🇭🇰 港澳跨境交通与黑钻汇率券</h3>
+        <ul class="text-xs space-y-2 text-[var(--muted-foreground)]">
+          <li>• <strong>深港过关省钱法</strong>：走<strong>莲塘口岸</strong>（城巴B7/B8仅10~15港币）或<strong>深圳湾口岸</strong>（美团提前团购环岛中港通/永东巴士往返仅60~80元），比罗湖坐东铁线省一半！</li>
+          <li>• <strong>穗港跨境大巴</strong>：广州天河/海珠直达香港旺角/尖沙咀往返套票仅 <strong>110～150 元</strong>（高铁单程就要215元）。</li>
+          <li>• <strong>必领汇率红包</strong>：过关前打开支付宝“惠出境”、微信“游港澳”小程序、云闪付报名境外返现。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TAB 3: FOOD & SUPERMARKET ================= -->
+  <div id="tab-food" class="tab-section hidden space-y-6">
+    <!-- Interactive Supermarket Discount Time Radar -->
+    <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[var(--border)]">
+        <div>
+          <h3 class="text-base font-bold">⏰ 广深商超晚间清仓 & 剩菜盲盒实时雷达</h3>
+          <p class="text-xs text-[var(--muted-foreground)]">拖动时间滑块查看下午 16:00 至深夜 22:30 各大超市与烘焙店的实时折扣力度</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs text-[var(--muted-foreground)]">当前模拟时间：</span>
+          <span id="radar-time-label" class="px-3 py-1 rounded-lg bg-[var(--primary)] text-[var(--primary-foreground)] font-mono font-bold text-sm">20:30</span>
+          <input type="range" id="radar-time-slider" min="16" max="22.5" step="0.5" value="20.5" oninput="updateSupermarketRadar(this.value)" class="w-36 accent-blue-600">
+        </div>
+      </div>
+      <div id="radar-cards-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-4 text-xs">
+        <!-- Populated dynamically by JS -->
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="deal-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm" data-city="all">
+        <h3 class="text-base font-bold mb-2">🥐 剩菜盲盒小程序（3～4折吃网红烘焙）</h3>
+        <p class="text-xs text-[var(--muted-foreground)] mb-3">当日现做未售罄的欧包、吐司、甜品、轻食沙拉，通常在 16:00–18:00 放库存，20:00–21:30 到店自提。</p>
+        <ul class="text-xs space-y-2 mb-4">
+          <li>• <strong>惜食魔法袋</strong>：广深覆盖最广，原价 40～60 元面包袋仅售 <strong>13.9～19.9 元</strong>。</li>
+          <li>• <strong>米粒盒子 / 兜着走 / 趣小袋</strong>：搜索家或公司附近 2 公里内门店并开启“上架提醒”。</li>
+          <li>• <strong>保鲜技巧</strong>：吃不完的欧包吐司密封放冰箱<strong>冷冻室</strong>，吃前空气炸锅 160°C 复烤 4 分钟即恢复酥脆。</li>
+        </ul>
+        <div class="flex flex-wrap gap-1.5 pt-3 border-t border-[var(--border)]">
+          <button onclick="copyText('惜食魔法袋')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 小程序：惜食魔法袋</button>
+          <button onclick="copyText('米粒盒子')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 小程序：米粒盒子</button>
+          <button onclick="copyText('兜着走')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 小程序：兜着走</button>
+        </div>
+      </div>
+
+      <div class="deal-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm" data-city="all">
+        <h3 class="text-base font-bold mb-2">🍲 霸王餐免费试、社区饭堂与每周餐饮日历</h3>
+        <ul class="text-xs space-y-2 text-[var(--muted-foreground)] mb-4">
+          <li>• <strong>大众点评“免费试”</strong>：保持 Lv4+ 每周把同城全部霸王餐点一遍报名，月均中 1～2 次免费双人正餐/下午茶。</li>
+          <li>• <strong>美团“拼好饭”</strong>：老乡鸡、真功夫、猪角、大米先生、瑞幸、古茗单人餐含配送仅 <strong>9.9～15.9 元</strong>。</li>
+          <li>• <strong>社区/长者饭堂（年轻人也能吃！）</strong>：广深各街道的长者饭堂对全市民开放，两荤一素+例汤现炒粤菜仅 <strong>12～18 元</strong>。</li>
+          <li>• <strong>固定折扣日</strong>：周一麦当劳免费鸡块券 · 周二永旺会员日/达美乐7折 · 周三招行5折/必胜客尖叫日 · 周四肯德基疯狂星期四。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TAB 4: CULTURE, SPORTS & LIBRARIES ================= -->
+  <div id="tab-culture" class="tab-section hidden space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="deal-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm" data-city="sz">
+        <div class="flex items-center justify-between mb-2">
+          <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-blue-500/15 text-blue-500">深圳文体福利</span>
+          <span class="text-xs font-semibold text-emerald-500">0元预约学校球场 / 抢6折体育券</span>
+        </div>
+        <h3 class="text-base font-bold mb-2">🏸 “i深圳”体育场馆一键预约 & 美丽星期天音乐会</h3>
+        <ul class="text-xs space-y-2 text-[var(--muted-foreground)] mb-4">
+          <li>• <strong>1800+所中小学球场免费开放</strong>：打开 `i深圳` App -> 体育场馆一键预约，家附近的公办学校田径场、室外篮球场在非教学时段 <strong>0 元预约入校锻炼</strong>。</li>
+          <li>• <strong>深圳体育消费券</strong>：每周固定时段在 `i深圳` 或 `福田文体通`、`南山文体通` 领满减券订羽毛球、网球、游泳馆。</li>
+          <li>• <strong>深圳音乐厅免费票</strong>：关注 `深圳音乐厅` 公众号，每周三/四免费抢周末“美丽星期天”与“音乐下午茶”演出票。</li>
+        </ul>
+        <div class="flex flex-wrap gap-1.5 pt-3 border-t border-[var(--border)]">
+          <button onclick="copyText('i深圳')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 App/小程序：i深圳</button>
+          <button onclick="copyText('福田文体通')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 小程序：福田文体通</button>
+          <button onclick="copyText('深圳音乐厅')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 公众号：深圳音乐厅</button>
+        </div>
+      </div>
+
+      <div class="deal-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm" data-city="gz">
+        <div class="flex items-center justify-between mb-2">
+          <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-amber-500/15 text-amber-500">广州文体福利</span>
+          <span class="text-xs font-semibold text-emerald-500">每周14小时免费 + 14小时半价</span>
+        </div>
+        <h3 class="text-base font-bold mb-2">🏟️ 广州“群体通”订场立减 & 白鹅潭/广文馆免费逛</h3>
+        <ul class="text-xs space-y-2 text-[var(--muted-foreground)] mb-4">
+          <li>• <strong>群体通 1414 惠民开放</strong>：天河体育中心、越秀山体育场、广州体育馆等市属场馆每周固定时段免费或半价（10~25元/小时），在 `群体通` 小程序还可领 10～30 元运动券。</li>
+          <li>• <strong>顶级免费艺术场馆</strong>：白鹅潭大湾区艺术中心（三馆合一）、广州市文化馆新馆（海珠湖绝美古风园林）、广东省博物馆、广州美术馆新馆全部 <strong>0 元预约</strong>。</li>
+        </ul>
+        <div class="flex flex-wrap gap-1.5 pt-3 border-t border-[var(--border)]">
+          <button onclick="copyText('群体通')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 小程序：群体通</button>
+          <button onclick="copyText('广州市文化馆')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 公众号：广州市文化馆</button>
+          <button onclick="copyText('广东省博物馆')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 公众号：广东省博物馆</button>
+        </div>
+      </div>
+
+      <div class="deal-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm md:col-span-2" data-city="all">
+        <div class="flex items-center justify-between mb-2">
+          <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-emerald-500/15 text-emerald-500">广深隐藏王炸福利</span>
+          <span class="text-xs font-semibold text-emerald-500">每年省下数千元培训费与会员费</span>
+        </div>
+        <h3 class="text-base font-bold mb-2">📚 广深市民夜校（0元公益班） + 图书馆读者证免费远程下载知网（CNKI）</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-[var(--muted-foreground)]">
+          <div>
+            <div class="font-bold text-[var(--foreground)] mb-1">1. 市民夜校 / 青年夜校抢课（每年 3月 & 9月大招）</div>
+            <p>涵盖瑜伽、爵士舞、声乐、钢琴、吉他、短视频剪辑、咖啡拉花、非遗手作、八段锦等。各区文化馆/团委/工会开设的公益班 <strong>0 元免费</strong>，普惠班也仅需 <strong>30～40 元/节</strong>！关注 `深圳市文化馆`、`青春深圳`、`广州市文化馆`、`广州青年` 设闹钟秒杀。</p>
+          </div>
+          <div>
+            <div class="font-bold text-[var(--foreground)] mb-1">2. 深圳图书馆 / 广州图书馆数字资源白嫖</div>
+            <p>线上免押金花 1 分钟办一张读者证，登录深图或广图官网“数字资源”，即可在家免费下载 <strong>中国知网(CNKI)论文、万方、维普、Web of Science</strong>，免费看 <strong>博看高清财经时尚杂志、新东方雅思托福考研全套视频网课、库客古典音乐库</strong>！</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TAB 5: BANKING & LABOR UNION ================= -->
+  <div id="tab-bank" class="tab-section hidden space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="deal-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm" data-city="all">
+        <div class="flex items-center justify-between mb-2">
+          <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-rose-500/15 text-rose-500">打工人最强官方外挂</span>
+          <span class="text-xs text-[var(--muted-foreground)]">灵活就业/小公司也能在线免费入会</span>
+        </div>
+        <h3 class="text-base font-bold mb-2">👷 三大工会小程序：深i工 · 穗工惠 · 粤工惠</h3>
+        <ul class="text-xs space-y-2 text-[var(--muted-foreground)] mb-4">
+          <li>• <strong>周周抢免费电影票 & 消费券</strong>：深圳认证 `深i工`、广州认证 `穗工惠`，同时再认证广东省 `粤工惠`，每月高频抽双人电影票、景区免票、满 20 减 19.9 元消费券。</li>
+          <li>• <strong>住院二次报销（医疗互助险）</strong>：工会免费或极低价为会员赠送职工医疗互助保障，医保报销完后的自付部分可申请工会二次补助！</li>
+          <li>• <strong>圆梦计划 & 返乡补贴</strong>：大专/本科学历提升学费补贴、夏送清凉饮品券、春节返乡高铁票补贴、12351 免费劳动仲裁律师援助。</li>
+        </ul>
+        <div class="flex flex-wrap gap-1.5 pt-3 border-t border-[var(--border)]">
+          <button onclick="copyText('深i工')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 小程序：深i工</button>
+          <button onclick="copyText('穗工惠')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 小程序：穗工惠</button>
+          <button onclick="copyText('粤工惠')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 小程序：粤工惠</button>
+        </div>
+      </div>
+
+      <div class="deal-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm" data-city="all">
+        <div class="flex items-center justify-between mb-2">
+          <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-blue-500/15 text-blue-500">每月保底撸 ¥50～¥200</span>
+          <span class="text-xs text-[var(--muted-foreground)]">微信立减金 + 数字人民币</span>
+        </div>
+        <h3 class="text-base font-bold mb-2">💳 银行 App 任务中心 & 数字人民币商超半价</h3>
+        <ul class="text-xs space-y-2 text-[var(--muted-foreground)] mb-4">
+          <li>• <strong>中国银行 App</strong>：“福仔云游记”、签到有礼、深圳/广州专属活动，每月稳定领 5～30 元微信立减金与话费满减。</li>
+          <li>• <strong>工商银行 App</strong>：“任务中心 -> 享活动”浏览抽奖，切换深圳/广州本地服务领社保卡专属立减金。</li>
+          <li>• <strong>建行生活 & 掌上生活</strong>：建行周五餐饮5折/外卖券；招行周三5折美食日与M+会员月度礼包。</li>
+          <li>• <strong>数字人民币红包</strong>：华润万家、天虹、美宜佳、7-11 常有数币钱包满 20 减 10；交水电燃气费前先看数币 App 消费红包。</li>
+        </ul>
+        <div class="flex flex-wrap gap-1.5 pt-3 border-t border-[var(--border)]">
+          <button onclick="copyText('建行生活')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 App：建行生活</button>
+          <button onclick="copyText('掌上生活')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 App：掌上生活</button>
+          <button onclick="copyText('数字人民币')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 App：数字人民币</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TAB 6: HEALTHCARE & SPECIAL GROUPS ================= -->
+  <div id="tab-health" class="tab-section hidden space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="deal-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm" data-city="all">
+        <div class="flex items-center justify-between mb-2">
+          <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-emerald-500/15 text-emerald-500">门诊报销 75%～85%</span>
+          <span class="text-xs text-[var(--muted-foreground)]">拔牙/补牙/针灸理疗/开药必看</span>
+        </div>
+        <h3 class="text-base font-bold mb-2">🏥 深圳绑定“社康” & 广州绑定“小点（社区医院）”</h3>
+        <ul class="text-xs space-y-2 text-[var(--muted-foreground)] mb-4">
+          <li>• <strong>深圳社康中心</strong>：在 `深圳医保` 公众号绑定家附近的社康，看普通门诊、开常备药、中医针灸拔罐推拿、基础补牙拔智齿，医保统筹报销高达 <strong>75%（退休80%）</strong>，比直接去三甲医院（55%）省一大半！</li>
+          <li>• <strong>广州选“小点”</strong>：在 `广州医保` 公众号选定 1 家社区卫生服务中心（小点），门诊报销高达 <strong>80%～85%</strong>；经小点转诊去大点医院报销比例也更高。</li>
+        </ul>
+        <div class="flex flex-wrap gap-1.5 pt-3 border-t border-[var(--border)]">
+          <button onclick="copyText('深圳医保')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 公众号：深圳医保</button>
+          <button onclick="copyText('广州医保')" class="copy-btn px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] hover:opacity-80">📋 公众号：广州医保</button>
+        </div>
+      </div>
+
+      <div class="deal-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm" data-city="all">
+        <div class="flex items-center justify-between mb-2">
+          <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-purple-500/15 text-purple-500">非深户/非广户常住也可享</span>
+          <span class="text-xs font-semibold text-purple-500">价值 ¥500～¥1,800 全免费</span>
+        </div>
+        <h3 class="text-base font-bold mb-2">🩺 国家公卫免费体检：两癌筛查 · 婚检孕检 · 长者体检</h3>
+        <ul class="text-xs space-y-2 text-[var(--muted-foreground)] mb-4">
+          <li>• <strong>适龄女性免费“两癌”筛查</strong>：常住适龄女性可在各区妇幼保健院或社康免费做 HPV 检测 + 乳腺彩超。</li>
+          <li>• <strong>免费婚检 & 孕前优生检查</strong>：备孕或准婚夫妇（持居住证即可）免费享 20+ 项全套检查（含甲功、优生五项、B超等，市场价约1500元）并免费领叶酸。</li>
+          <li>• <strong>65岁以上长者每年1次免费体检</strong>：父母在广深常住满半年，到所在社康建档即可每年免费做血常规、肝肾功能、血脂、心电图、腹部B超全套体检！</li>
+        </ul>
+      </div>
+
+      <div class="deal-card bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm md:col-span-2" data-city="all">
+        <h3 class="text-base font-bold mb-2">👨‍👩‍👧‍👦 深圳颐年卡（60岁非深户可办！）· 广州长者卡 · 学生与少儿医保</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-[var(--muted-foreground)]">
+          <div class="p-3 rounded-xl bg-[var(--secondary)]">
+            <div class="font-bold text-[var(--foreground)] mb-1">🧓 深圳智慧养老“颐年卡”</div>
+            <p>年满 <strong>60 周岁</strong>（<strong>含非深户、外地来深投靠子女父母！</strong>）即可在 `i深圳` 或平安口袋银行免费申领：享<strong>深圳全市地铁、公交全时段免费</strong>（刷脸过闸），全市公立公园与政府景区免票！</p>
+          </div>
+          <div class="p-3 rounded-xl bg-[var(--secondary)]">
+            <div class="font-bold text-[var(--foreground)] mb-1">👵 广州老年人优待卡</div>
+            <p>广州户籍或持广州居住证的年满 60 周岁长者可在 `穗好办` 申领：<strong>60～64 岁坐公交地铁水上巴士半价，65 岁及以上全免费</strong>，白云山、广州动物园、植物园等享半价或免票。</p>
+          </div>
+          <div class="p-3 rounded-xl bg-[var(--secondary)]">
+            <div class="font-bold text-[var(--foreground)] mb-1">🎓 大学生认证 & 少儿医保</div>
+            <p>在读大学生支付宝认证学信网享海底捞 69 折、Apple教育优惠叠加国补；广深新生儿出生规定时间内办<strong>少儿医保</strong>（约400~550元/年），享出生落地即追溯报销！</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TAB 7: QUICK COPY TOOLS & TIMELINE ================= -->
+  <div id="tab-tools" class="tab-section hidden space-y-6">
+    <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm">
+      <h3 class="text-base font-bold mb-1">📱 广深打工人必装 App / 小程序一键复制速查表</h3>
+      <p class="text-xs text-[var(--muted-foreground)] mb-4">点击任意标签即可自动复制名称，直接去微信、支付宝或应用商店粘贴搜索</p>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="border-b border-[var(--border)] text-[var(--muted-foreground)]">
+              <th class="py-2.5 px-3">功能分类</th>
+              <th class="py-2.5 px-3">深圳必备入口 (点击复制)</th>
+              <th class="py-2.5 px-3">广州必备入口 (点击复制)</th>
+              <th class="py-2.5 px-3">广深通用神器 (点击复制)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[var(--border)]">
+            <tr>
+              <td class="py-2.5 px-3 font-semibold">政务与场馆预约</td>
+              <td class="py-2.5 px-3 space-x-1">
+                <button onclick="copyText('i深圳')" class="copy-btn px-2 py-1 rounded bg-blue-500/10 text-blue-500 font-medium">📋 i深圳</button>
+                <button onclick="copyText('福田文体通')" class="copy-btn px-2 py-1 rounded bg-[var(--secondary)]">📋 福田文体通</button>
+                <button onclick="copyText('南山文体通')" class="copy-btn px-2 py-1 rounded bg-[var(--secondary)]">📋 南山文体通</button>
+              </td>
+              <td class="py-2.5 px-3 space-x-1">
+                <button onclick="copyText('穗好办')" class="copy-btn px-2 py-1 rounded bg-amber-500/10 text-amber-500 font-medium">📋 穗好办</button>
+                <button onclick="copyText('群体通')" class="copy-btn px-2 py-1 rounded bg-[var(--secondary)]">📋 群体通</button>
+              </td>
+              <td class="py-2.5 px-3 space-x-1">
+                <button onclick="copyText('粤省事')" class="copy-btn px-2 py-1 rounded bg-[var(--secondary)]">📋 粤省事</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="py-2.5 px-3 font-semibold">工会隐藏福利</td>
+              <td class="py-2.5 px-3">
+                <button onclick="copyText('深i工')" class="copy-btn px-2 py-1 rounded bg-blue-500/10 text-blue-500 font-medium">📋 深i工 (深圳工会)</button>
+              </td>
+              <td class="py-2.5 px-3">
+                <button onclick="copyText('穗工惠')" class="copy-btn px-2 py-1 rounded bg-amber-500/10 text-amber-500 font-medium">📋 穗工惠 (广州工会)</button>
+              </td>
+              <td class="py-2.5 px-3">
+                <button onclick="copyText('粤工惠')" class="copy-btn px-2 py-1 rounded bg-[var(--secondary)]">📋 粤工惠</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="py-2.5 px-3 font-semibold">交通与出行</td>
+              <td class="py-2.5 px-3">
+                <button onclick="copyText('深圳通')" class="copy-btn px-2 py-1 rounded bg-[var(--secondary)]">📋 深圳通</button>
+              </td>
+              <td class="py-2.5 px-3">
+                <button onclick="copyText('羊城通')" class="copy-btn px-2 py-1 rounded bg-[var(--secondary)]">📋 羊城通</button>
+              </td>
+              <td class="py-2.5 px-3 space-x-1">
+                <button onclick="copyText('云闪付')" class="copy-btn px-2 py-1 rounded bg-[var(--secondary)]">📋 云闪付</button>
+                <button onclick="copyText('如祺出行')" class="copy-btn px-2 py-1 rounded bg-[var(--secondary)]">📋 如祺出行</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="py-2.5 px-3 font-semibold">夜校与免费知网</td>
+              <td class="py-2.5 px-3 space-x-1">
+                <button onclick="copyText('深圳图书馆')" class="copy-btn px-2 py-1 rounded bg-[var(--secondary)]">📋 深圳图书馆</button>
+                <button onclick="copyText('深圳市文化馆')" class="copy-btn px-2 py-1 rounded bg-[var(--secondary)]">📋 深圳市文化馆</button>
+              </td>
+              <td class="py-2.5 px-3 space-x-1">
+                <button onclick="copyText('广州图书馆')" class="copy-btn px-2 py-1 rounded bg-[var(--secondary)]">📋 广州图书馆</button>
+                <button onclick="copyText('广州市文化馆')" class="copy-btn px-2 py-1 rounded bg-[var(--secondary)]">📋 广州市文化馆</button>
+              </td>
+              <td class="py-2.5 px-3">
+                <button onclick="copyText('中国国家数字图书馆')" class="copy-btn px-2 py-1 rounded bg-[var(--secondary)]">📋 国家数字图书馆</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="py-2.5 px-3 font-semibold">超市盲盒与消费券</td>
+              <td class="py-2.5 px-3 space-x-1">
+                <button onclick="copyText('深圳本地宝')" class="copy-btn px-2 py-1 rounded bg-[var(--secondary)]">📋 深圳本地宝</button>
+                <button onclick="copyText('深圳以旧换新')" class="copy-btn px-2 py-1 rounded bg-[var(--secondary)]">📋 深圳以旧换新</button>
+              </td>
+              <td class="py-2.5 px-3 space-x-1">
+                <button onclick="copyText('广州本地宝')" class="copy-btn px-2 py-1 rounded bg-[var(--secondary)]">📋 广州本地宝</button>
+                <button onclick="copyText('粤焕新')" class="copy-btn px-2 py-1 rounded bg-[var(--secondary)]">📋 粤焕新</button>
+              </td>
+              <td class="py-2.5 px-3 space-x-1">
+                <button onclick="copyText('惜食魔法袋')" class="copy-btn px-2 py-1 rounded bg-emerald-500/10 text-emerald-500 font-medium">📋 惜食魔法袋</button>
+                <button onclick="copyText('米粒盒子')" class="copy-btn px-2 py-1 rounded bg-[var(--secondary)]">📋 米粒盒子</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tabs = ['gov', 'transit', 'food', 'culture', 'bank', 'health', 'tools'];
+    let currentCity = 'all';
+
+    function switchTab(activeTab) {
+      tabs.forEach(t => {
+        const section = document.getElementById('tab-' + t);
+        const btn = document.getElementById('tab-btn-' + t);
+        if (t === activeTab) {
+          section.classList.remove('hidden');
+          btn.className = 'px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold transition bg-[var(--primary)] text-[var(--primary-foreground)]';
+        } else {
+          section.classList.add('hidden');
+          btn.className = 'px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold transition bg-[var(--secondary)] text-[var(--secondary-foreground)]';
+        }
+      });
+    }
+
+    function setCityFilter(city) {
+      currentCity = city;
+      ['all', 'sz', 'gz'].forEach(c => {
+        const btn = document.getElementById('city-btn-' + c);
+        if (c === city) {
+          btn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-[var(--primary)] text-[var(--primary-foreground)]';
+        } else {
+          btn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition text-[var(--secondary-foreground)]';
+        }
+      });
+      applyFilters();
+    }
+
+    function handleSearch(query) {
+      const q = query.trim().toLowerCase();
+      if (q.length > 0) {
+        tabs.forEach(t => document.getElementById('tab-' + t).classList.remove('hidden'));
+      }
+      applyFilters(q);
+    }
+
+    function applyFilters(searchQuery = document.getElementById('global-search').value.trim().toLowerCase()) {
+      document.querySelectorAll('.deal-card').forEach(card => {
+        const cardCity = card.getAttribute('data-city');
+        const cityMatch = (currentCity === 'all' || cardCity === 'all' || cardCity === currentCity);
+        const textMatch = !searchQuery || card.innerText.toLowerCase().includes(searchQuery);
+        if (cityMatch && textMatch) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById('copy-toast');
+        toast.textContent = '✅ 已复制「' + text + '」，可直接去微信/支付宝/抖音粘贴搜索！';
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 2400);
+      });
+    }
+
+    function updateTransitCalc() {
+      const fare = parseFloat(document.getElementById('calc-fare').value);
+      const days = parseInt(document.getElementById('calc-days').value, 10);
+      const trips = days * 2;
+      document.getElementById('calc-fare-label').textContent = '¥' + fare;
+      document.getElementById('calc-days-label').textContent = days + '天 (' + trips + '次)';
+
+      const rawTotal = fare * trips;
+      document.getElementById('calc-raw-total').textContent = '¥' + rawTotal.toFixed(1);
+
+      // Guangzhou Yangchengtong tiered calculation
+      let gzPaid = 0;
+      for (let i = 0; i < trips; i++) {
+        if (gzPaid < 80) {
+          gzPaid += fare;
+        } else if (gzPaid < 200) {
+          gzPaid += fare * 0.8;
+        } else if (gzPaid < 400) {
+          gzPaid += fare * 0.5;
+        } else {
+          gzPaid += fare;
+        }
+      }
+      const gzSaved = Math.max(0, rawTotal - gzPaid);
+      document.getElementById('calc-gz-total').innerHTML = '¥' + gzPaid.toFixed(1) + ' <span class="text-xs font-normal text-emerald-500">(省 ¥' + gzSaved.toFixed(1) + ')</span>';
+
+      // Shenzhen Tong NFC (95% metro) + weekly voucher pack (~1.2 yuan off for 20 trips)
+      const szPaid = Math.max(trips * 0.01, rawTotal * 0.95 - Math.min(trips, 25) * 1.2);
+      const szSaved = Math.max(0, rawTotal - szPaid);
+      document.getElementById('calc-sz-total').innerHTML = '¥' + szPaid.toFixed(1) + ' <span class="text-xs font-normal text-emerald-500">(省 ¥' + szSaved.toFixed(1) + ')</span>';
+    }
+
+    function updateSupermarketRadar(val) {
+      const hour = parseFloat(val);
+      const h = Math.floor(hour);
+      const m = (hour - h) === 0.5 ? '30' : '00';
+      document.getElementById('radar-time-label').textContent = h + ':' + m;
+
+      const stores = [
+        {
+          name: '永旺 (AEON) 熟食/寿司',
+          status: hour < 19.5 ? '正价销售中 (建议20:00后再来)' : (hour < 21 ? '🔥 7～8折 黄标贴签中' : '⚡ 5折半价 / 买一送一清仓！'),
+          badge: hour < 19.5 ? '正价' : (hour < 21 ? '7~8折' : '5折清仓'),
+          color: hour < 19.5 ? 'text-[var(--muted-foreground)]' : (hour < 21 ? 'text-amber-500 font-bold' : 'text-emerald-500 font-bold'),
+          items: '必抢：三文鱼寿司拼盘、日式便当、炸鸡烤物'
+        },
+        {
+          name: '盒马鲜生 & 盒马奥莱',
+          status: hour < 19.5 ? '盒马奥莱全天5~7折 / 鲜生正价' : (hour < 21 ? '🔥 日日鲜/烘焙开启 7～8折' : '⚡ 全场日日鲜 5～6折底价清仓！'),
+          badge: hour < 19.5 ? '奥莱6折' : (hour < 21 ? '7~8折' : '5~6折'),
+          color: hour < 19.5 ? 'text-blue-500 font-semibold' : (hour < 21 ? 'text-amber-500 font-bold' : 'text-emerald-500 font-bold'),
+          items: '必抢：日日鲜牛奶、瑞士卷、轻食沙拉、鲜肉'
+        },
+        {
+          name: '惜食魔法袋 / 米粒盒子 (剩菜盲盒)',
+          status: (hour >= 16 && hour <= 18.5) ? '⚡ 高峰放货期！速打开小程序抢订' : (hour >= 20 ? '🛍️ 到店核销自提时段 (3~4折)' : '等待放货或余量捡漏'),
+          badge: (hour >= 16 && hour <= 18.5) ? '正在放货!' : '3~4折盲盒',
+          color: (hour >= 16 && hour <= 18.5) ? 'text-emerald-500 font-bold' : 'text-blue-500 font-semibold',
+          items: '必抢：周边独立烘焙店欧包袋、吐司甜品盲盒'
+        },
+        {
+          name: '钱大妈 (定时阶梯打折)',
+          status: hour < 19 ? '正价时段 (19:00准时开折)' : (hour === 19 ? '9折时段' : (hour === 19.5 ? '8折时段' : (hour === 20 ? '🔥 7折黄金入手期(菜品仍齐)' : (hour === 20.5 ? '🔥 6折高性价比期' : (hour === 21 ? '⚡ 5折半价抢购' : '⚡ 3～4折兜底清仓'))))),
+          badge: hour < 19 ? '正价' : ((10 - (hour - 18.5) * 2) + '折'),
+          color: hour < 19 ? 'text-[var(--muted-foreground)]' : (hour >= 20 ? 'text-emerald-500 font-bold' : 'text-amber-500 font-bold'),
+          items: '必抢：鲜排骨、潮汕牛肉、有机叶菜、冰鲜水产'
+        },
+        {
+          name: '沃尔玛 / 华润 Olé 精品超市',
+          status: hour < 19.5 ? '正价时段' : (hour < 20.5 ? '🔥 熟食烤鸡/欧包 7.5折黄标' : '⚡ 晚间打包清仓果蔬袋 & 6折欧包'),
+          badge: hour < 19.5 ? '正价' : (hour < 20.5 ? '7.5折' : '6折清仓'),
+          color: hour < 19.5 ? 'text-[var(--muted-foreground)]' : 'text-emerald-500 font-bold',
+          items: '必抢：沃尔玛现烤整鸡、Olé 乳酪欧包与切盒水果'
+        },
+        {
+          name: '山姆会员店 (Sam\'s Club)',
+          status: '全天20+试吃档口开放 + 尾数.1黄标清仓尾货',
+          badge: '无限试吃',
+          color: 'text-purple-500 font-semibold',
+          items: '必看：牛肉/三文鱼试吃、货架尾数 .1 元特价牌'
+        }
+      ];
+
+      const container = document.getElementById('radar-cards-container');
+      container.innerHTML = stores.map(s => `
+        <div class="p-3.5 rounded-xl bg-[var(--secondary)] border border-[var(--border)] flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-1">
+              <span class="font-bold text-[var(--foreground)]">${s.name}</span>
+              <span class="px-2 py-0.5 rounded text-[11px] bg-[var(--card)] ${s.color}">${s.badge}</span>
+            </div>
+            <div class="${s.color} my-1">${s.status}</div>
+          </div>
+          <div class="text-[11px] text-[var(--muted-foreground)] mt-2 pt-1.5 border-t border-[var(--border)]">${s.items}</div>
+        </div>
+      `).join('');
+    }
+
+    // Initialize calculators on load
+    updateTransitCalc();
+    updateSupermarketRadar(20.5);
+  </script>
+</body>
+</html>
