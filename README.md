@@ -18,13 +18,13 @@
 
 ### 01. 🏛️ [政府消费券、国补与政务补贴](./01-government-subsidies/)
 - [广深各区消费券（餐饮/零售/文旅）与有奖发票攻略](./01-government-subsidies/consumption-vouchers.md)
-- [家电、手机数码、汽车“以旧换新”国补/省补申领指南](./01-government-subsidies/trade-in-national-subsidies.md)
-- [技能提升补贴（考证领 1000~3000 元）、个税继续教育抵扣与青年人才安居福利](./01-government-subsidies/talent-and-skill-subsidies.md)
+- [家电、3C数码、广州6类扩围、智能家居与适老化改造（最高30%）国补指南](./01-government-subsidies/trade-in-national-subsidies.md)
+- [技能提升补贴（考证领 1000~3000 元）、广州应届生基层就业补贴（3000元）与青年人才安居福利](./01-government-subsidies/talent-and-skill-subsidies.md)
 
 ### 02. 🚇 [交通出行与深港/广珠跨境羊毛](./02-transit-and-travel/)
-- [深圳通 & 羊城通阶梯折扣、云闪付/银行卡/数字人民币乘车优惠](./02-transit-and-travel/metro-and-bus.md)
+- [深圳通 & 羊城通阶梯折扣（取消封顶）、碳普惠（低碳星球）免费换乘车券与数币优惠](./02-transit-and-travel/metro-and-bus.md)
 - [打车券包、共享单车、商场积分免停车费与新能源谷电充电](./02-transit-and-travel/ride-hailing-and-parking.md)
-- [港澳跨境交通与支付羊毛（八达通、AlipayHK、跨境大巴/港铁特惠）](./02-transit-and-travel/hk-macau-cross-border.md)
+- [港澳跨境交通与支付羊毛（交通联合卡直刷港铁、跨境大巴套票、AlipayHK/黑钻汇率）](./02-transit-and-travel/hk-macau-cross-border.md)
 
 ### 03. 🍱 [餐饮美食、超市晚间打折与剩菜盲盒](./03-food-and-supermarket/)
 - [主流商超晚间清仓打折时刻表（盒马/永旺AEON/沃尔玛/山姆/钱大妈）](./03-food-and-supermarket/supermarket-clearance.md)
@@ -34,14 +34,14 @@
 ### 04. 🏸 [文体场馆、市民夜校与公共免费资源](./04-culture-sports-education/)
 - [体育场馆低免开放预约（深圳“i深圳” / 广州“群体通”）与免费国民体质测定（测体脂/骨密度）](./04-culture-sports-education/sports-and-venues.md)
 - [广深市民夜校抢课、图书馆免费远程用知网（CNKI）与党群服务中心/智能书房免费自习](./04-culture-sports-education/night-school-and-libraries.md)
-- [免费博物馆/美术馆、公园露营与低价电影演出票渠道](./04-culture-sports-education/museums-parks-exhibitions.md)
+- [免费博物馆、景区生日免票/半价（小梅沙/长隆/欢乐谷）、“深i公园”露营停车预约与低价电影票](./04-culture-sports-education/museums-parks-exhibitions.md)
 
-### 05. 💳 [银行卡立减金、数字人民币与工会福利](./05-banking-and-union/)
-- [银行App本地商圈5折、微信立减金与数字人民币（DCEP）红包](./05-banking-and-union/bank-and-dcep-perks.md)
+### 05. 💳 [银行卡立减金、工会福利与水电快递省钱](./05-banking-and-union/)
+- [银行App商圈5折、微信立减金、数币红包与“南网在线”一户多人口阶梯电费增容](./05-banking-and-union/bank-and-dcep-perks.md)
 - [工会隐藏福利（“深i工”积分3折兑单车月卡 / “穗工惠” / “粤工惠”观影券与住院二次报销）](./05-banking-and-union/labor-union-perks.md)
 
 ### 06. 🏥 [医疗社康报销、医保买药比价与免费公卫体检](./06-healthcare-and-special-groups/)
-- [深圳社康 & 广州小点高额报销、“粤医保”买药实时比价与免费公卫体检（两癌/婚检/长者）](./06-healthcare-and-special-groups/community-health-and-checkups.md)
+- [深圳社康 & 广州小点高额报销、“粤医保”买药比价、“深圳惠民保”免费洗牙与免费公卫体检](./06-healthcare-and-special-groups/community-health-and-checkups.md)
 - [长者优待（深圳颐年卡/广州长者卡）、学生优惠与少儿医保福利](./06-healthcare-and-special-groups/student-senior-family-perks.md)
 
 ---
